@@ -1,52 +1,39 @@
-var movies = angular.module('ImdbMovies', ['ionic']);
+'use strict';
 
-movies.controller('MovieController', function($scope, $http, Movies)
-{
-    $scope.searchmovie = 'no';
-    $scope.showloader = "no";
-    $scope.search = function()
-    {
-        $scope.showloader = "yes";
-        //console.log('clicked');
-        Movies.get(document.getElementById('movie-title').value)
-       .success(function(data) {
-           console.log(data);
-            
-            $scope.searchmovie = 'yes';
+angular.module('myApp', [])
+  .controller('MovieController', function($scope, $http) {
+    var pendingTask;
 
-            $scope.title = data['Title'];
-            $scope.year = data['Year'];
-            $scope.runtime = data['Runtime'];
-            $scope.genre = data['Genre'];
-            $scope.imdbRating = data['imdbRating'];
-            $scope.director = data['Director'];
-            $scope.actors = data['Actors'];
-            $scope.language = data['Language'];
-            $scope.country = data['Country'];
-            $scope.awards = data['Awards'];
-            $scope.writer = data['Writer'];
-            $scope.plot = data['Plot'];
-            $scope.poster = data['Poster'];
-            $scope.response = data['Response'];
-            $scope.votes = data['imdbVotes'];   
-
-            if(data['Response'] == 'False')
-            {   
-                $scope.error = data['Error'];
-            }
-            
-            $scope.showloader = "no";
-       }); 
+    if ($scope.search === undefined) {
+      $scope.search = "";
+      fetch();
     }
-});
 
-movies.factory('Movies', function($http) {
-    return {
-        get: function(title) {
-            return $http({
-                url: "http://www.omdbapi.com?t="+title+"&y=&plot=full&r=json",
-                method: "GET"
-            }); 
-        }
+    $scope.change = function() {
+      if (pendingTask) {
+        clearTimeout(pendingTask);
+      }
+      pendingTask = setTimeout(fetch, 800);
+    };
+
+    function fetch() {
+      $http.get("http://www.omdbapi.com/?t=" + $scope.search + "&tomatoes=true&plot=full")
+        .success(function(response) {
+          $scope.details = response;
+        });
+
+      $http.get("http://www.omdbapi.com/?s=" + $scope.search)
+        .success(function(response) {
+          $scope.related = response;
+        });
     }
-});
+
+    $scope.update = function(movie) {
+      $scope.search = movie.Title;
+      $scope.change();
+    };
+
+    $scope.select = function() {
+      this.setSelectionRange(0, this.value.length);
+    }
+  });
