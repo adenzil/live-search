@@ -6,7 +6,7 @@ angular.module('myApp', [])
 
     if ($scope.search === undefined) {
       $scope.search = "";
-      fetch();
+      //fetch();
     }
 
     $scope.change = function() {
@@ -17,10 +17,10 @@ angular.module('myApp', [])
     };
 
     function fetch() {
-      $http.get("http://www.omdbapi.com/?t=" + $scope.search + "&tomatoes=true&plot=full")
-        .success(function(response) {
-          $scope.details = response;
-        });
+      // $http.get("http://www.omdbapi.com/?t=" + $scope.search)
+      //   .success(function(response) {
+      //     $scope.details = response;
+      //   });
 
       $http.get("http://www.omdbapi.com/?s=" + $scope.search)
         .success(function(response) {
@@ -29,11 +29,18 @@ angular.module('myApp', [])
     }
 
     $scope.update = function(movie) {
-      $scope.search = movie.Title;
-      $scope.change();
+      // $scope.search = movie.Title;
+      // $scope.change();
+
+      $http.get("http://www.omdbapi.com/?t=" + movie.Title)
+        .success(function(response) {
+          $scope.details = response;
+        });
+
     };
 
     $scope.select = function() {
       this.setSelectionRange(0, this.value.length);
+      console.log(this.value.length);
     }
   });
