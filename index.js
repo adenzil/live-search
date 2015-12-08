@@ -4,34 +4,42 @@ angular.module('myApp', [])
   .controller('MovieController', function($scope, $http) {
     var pendingTask;
 
-    if ($scope.search === undefined) {
-      $scope.search = "";
-      //fetch();
-    }
-
     $scope.change = function() {
-      if (pendingTask) {
-        clearTimeout(pendingTask);
+      if ($scope.search != "")
+      {   
+          fetch();
       }
-      pendingTask = setTimeout(fetch, 800);
+      else
+        {
+
+        }
     };
 
     function fetch() {
-      // $http.get("http://www.omdbapi.com/?t=" + $scope.search)
-      //   .success(function(response) {
-      //     $scope.details = response;
-      //   });
-
       $http.get("http://www.omdbapi.com/?s=" + $scope.search)
         .success(function(response) {
           $scope.related = response;
         });
     }
 
-    $scope.update = function(movie) {
-      // $scope.search = movie.Title;
-      // $scope.change();
+    $scope.enter = function(e) {
 
+    if (e.keyCode == 13) {
+        loadItems($scope.mysearch);
+    }
+}
+
+    function keyup(a) {
+      console.log(123);
+      console.log(a);
+    }
+
+    function empty() {
+      if ($scope.search == "")
+          return true;
+    }
+
+    $scope.update = function(movie) {
       $http.get("http://www.omdbapi.com/?t=" + movie.Title)
         .success(function(response) {
           $scope.details = response;
@@ -41,6 +49,5 @@ angular.module('myApp', [])
 
     $scope.select = function() {
       this.setSelectionRange(0, this.value.length);
-      console.log(this.value.length);
     }
   });
