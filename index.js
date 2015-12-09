@@ -29,11 +29,6 @@ angular.module('myApp', [])
     }
 }
 
-    function keyup(a) {
-      console.log(123);
-      console.log(a);
-    }
-
     function empty() {
       if ($scope.search == "")
           return true;
