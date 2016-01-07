@@ -10,10 +10,7 @@ movies.controller('MovieController', function($scope, $http, Movies)
         //console.log('clicked');
         Movies.get(document.getElementById('movie-title').value)
        .success(function(data) {
-           console.log(data);
-            
             $scope.searchmovie = 'yes';
-
             $scope.title = data['Title'];
             $scope.year = data['Year'];
             $scope.runtime = data['Runtime'];
